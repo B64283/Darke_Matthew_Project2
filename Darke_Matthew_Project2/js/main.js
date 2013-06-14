@@ -11,77 +11,105 @@ window.addEventListener("DOMContentLoaded", function() {
 	    var ele = document.getElementById(x);
 	    return ele;
     }
-   function makingOptions(){
+    
+   function climate(){
 	   var formTag = document.getElementsByTagName("form"),
-	   	selectli = $("climate"),
+	   	selectli = $("climates"),
 	   	makeSelect = document.createElement("select");
-	   	makeSelect.setAttribute("id", "climate");
-	 for (var i=0,  j=climate.length; i<j; i++){
+	   	makeSelect.setAttribute("id", "climates");
+	 for (var i=0,  j=climates.length; i<j; i++){
 	 	var makeOption = document.createElement("option");
-	 	var optText = climate[i]; 
+	    optText = climates[i]; 
 	 	makeOption.setAttribute("value", optText);
 	 	makeOption.innerHTML = optText;
 	 	makeSelect.appendChild(makeOption);
 	 }
-	selectli.appendChild(makeSelect);   	
+	selectLi.appendChild(makeSelect);   	
 }
-   var climate = ["Hot", "Raining", "Cold"];
-   makingOptions();
+   //var climatesvalue = ["Hot", "Raining", "Cold"];
+   //climate();
    
+   // check box values
    
-   
-   
-   
-   
-   
-    //var itemList = [""]
-    //display and clear data links and submit
-    function getselectedCheckboxValue(){
-	    var Checkbox = document.getElementById("Clothes", "Medication", "Toiletries");
-	    for (var i=0; i<Checkbox.length; i++){
-		    if (Checkbox[i].checked ){
-		        checkedValue = Checkbox[i].value;
-			    
-		  }
-	   }	    
-   }
+   function getClothesvalue(){
+	   if ($("Clothes").checked){
+		   Clothesvalue = ("Clothes").value;
+	   } else { Clothesvalue = "none";	    
+	   };
+   };
+   function getMedicationvalue(){
+	   if ($("Medication").checked){
+		   Medicationvalue = ("Medication").value;
+	   } else { Medicationvalue = "none";	    
+	   };
+   };
+   function getToiletriesvalue(){
+	   if ($("Toiletries").checked){
+		   Toiletriesvalue = ("Toiletries").value;
+	   } else { Toiletriesvalue = "none";	    
+	   };
+   };
+   function toggleControls(n){
+	   switch(n){
+	        case "on":
+	       	    $("vacationForm").style.display = "none";
+	       	    $("clear").style.display = "inline";
+	       	    $("Display").style.display = "none";
+	       	    $("addNew").style.display = "inline";
+	       	    break;
+	        case "off":
+	            $("vacationForm").style.display = "block";
+	       	    $("clear").style.display = "inline";
+	       	    $("Display").style.display = "inline";
+	       	    $("addNew").style.display = "none";
+	       	    $("items").style.display = "none";
+	       	    break;
+	        default:
+	            return false;      
+      };
+   };
     function storeData() {
-	    var id           = Math.floor(Math.random()*100000002);
+	    var id           = Math.floor(Math.random()*10000001);
 	    //gets all form field values and store in object.
 	    //object properties contain array with the form labels and input values.
-	    getselectedCheckboxValue()	    
-	    var item			  = {}; 
-	        item.name        =[ "formItems", $( "vacationForm" ).value ];
-	        item.checkList     =["Checkbox", $("Clothes").value ];	        
-	        item.Budget       =["budgetscale" , $("budgetplan").value];
-	        item.date          =["date", $("startdate").value ];	        
-	        item.climate       =["climateType", $("climate").value ];
-	        item.extraNotes    =["thoughts", $("notes").value ];
+        getClothesvalue();
+        getMedicationvalue();
+        getToiletriesvalue()
+	    var item			    = {}; 
+	        item.name          =["Item name:", $( "Iname" ).value];
+	        item.checkList       =["checkbox Clothes:", Clothes.value];
+	        item.checkList       =["checkbox Medication:", Medication.value];
+	        item.checkList       =["checkbox Toiletries:", Toiletries.value];	        
+	        item.Budget         =["Budget scale:" , $("budgetplan").value];
+	        item.date           =["Vacation starts on:", $("startdate").value];	        
+	        item.climateTyp     =["Type of climate:", $("climates").value];
+	        item.extraNotes     =["extra thoughts!:", $("notes").value];
 	   //save data in local storage and use stringify to convert data into string
-	   localStorage.setItem(id, JSON.stringify(item));
+	   localStorage.setItem(id, JSON.stringify(item) );
 	   alert("Checklist Complete!");
 	       
     }
     function getData (){
-    	var createDiv = document.createElement("div");
-    	createDiv.setAttribute("id", "items");
+    	toggleControls("on");
+    	var makeDiv = document.createElement("div");
+    	makeDiv.setAttribute("id", "items");
     	var makeList = document.createElement("ul");
-    	createDiv.appendChild(makeList);
-    	document.body.appendChild(createDiv);
-    	for(var i =0, len=localStorage.length; i<len; i++){
+    	makeDiv.appendChild(makeList);
+    	document.body.appendChild(makeDiv);
+    	$("items").style.display = "inline";    	
+    	for(var i=0, len=localStorage.length; i<len; i++){
 	    	var makeli = document.createElement("li");
 	    	makeList.appendChild(makeli);
 	    	var key = localStorage.key(i);
 	    	var value = localStorage.getItem(key);
-	    	//converts string from local storage value back to object using JSON.parse()
-	    	var str = JSON.parse(value);
-	    	var createSublist = document.createElement("ul");
-	    	makeli.appendChild("createSublist");
-	    	for (var n in str){
-		    	var createSublist = document.createElement("li");
-		    	createSublist.appendChild("createSublist");
-		    	var subText = obj[n][0]+" "+obj[n][1];
-		    	makeSublist.innerHTML = subText; 
+	    	var obj = JSON.parse(value);
+	    	var makeSubList = document.createElement("ul");
+	    	makeli.appendChild(makeSubList);
+	    	for (var n in obj){
+		    	var makeSubLi = document.createElement("li");
+		    	makeSubList.appendChild(makeSubLi);
+		    	var optSubText = obj[n][0]+" "+obj[n][1];
+		    	makeSubList.innerHTML = optSubText; 
 		   } 
 	    }
     }
